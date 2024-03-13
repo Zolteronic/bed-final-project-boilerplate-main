@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User{
+  id       String      @id @default(uuid())
+  username     String  @unique
+  password String
+  name     String
+  email     String  
+  phoneNumber String
+  profilePicture String?
+  reviews Review[]
+  booking Booking[]
+}
+
+model Booking{
+  id String @id @default(uuid())
+  userId String 
+  user User @relation(fields: [userId], references: [id])
+  @@index(fields:[userId])
+  propertyId String
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  @@index(fields:[propertyId])
+  checkinDate DateTime
+  checkoutDate DateTime
+  numberOfGuests Int
+  totalPrice Float
+  bookingStatus String
+}
+
+model Review{
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id]) 
+  @@index(fields: [userId])
+  propertyId String
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  @@index(fields: [propertyId])
+  rating Int?
+  comment String?
+}
+
+model Amenity {
+  id         String     @id @default(uuid())
+  name       String
+  properties Property[] @relation("PropertyAmenity")
+}
+
+model Host {
+  id         String     @id @default(uuid())
+  username   String     @unique
+  password   String
+  name       String
+  email      String 
+  phoneNumber String
+  profilePicture String?
+  aboutMe    String?
+  properties Property[]
+}
+
+model Property {
+  id            String   @id @default(uuid())
+  hostId        String
+  host          Host     @relation(fields: [hostId], references: [id])
+  title         String
+  description   String
+  location      String
+  pricePerNight Decimal @db.Decimal(10, 2)
+  bedroomCount  Int
+  bathRoomCount Int
+  maxGuestCount Int
+  rating        Int
+  reviews       Review[]
+  bookings      Booking[]
+  amenities     Amenity[] @relation("PropertyAmenity")
+  @@index([hostId])
+}

@@ -47,6 +47,12 @@ router.post(
         profilePicture,
         aboutMe,
       } = req.body;
+
+      if (!username) {
+        res.status(400).json({ error: "Username is required" });
+        return;
+      }
+
       const host = await createHost(
         username,
         password,

@@ -30,13 +30,19 @@ router.post(
   async (req, res, next) => {
     try {
       const { userId, propertyId, rating, comment } = req.body;
+
+      if (!userId) {
+        throw new IdRequiredError("userId");
+      }
+
       const review = await createReview(userId, propertyId, rating, comment);
       res.status(201).json(review);
     } catch (error) {
       next(error);
     }
   },
-  NotFoundErrorHandler
+  NotFoundErrorHandler,
+  IdRequiredErrorHandler
 );
 
 router.get(

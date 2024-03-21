@@ -6,6 +6,8 @@ import getProperties from "../services/properties/getProperties.js";
 import createProperty from "../services/properties/createProperty.js";
 import getPropertyById from "../services/properties/getPropertyById.js";
 import auth from "../Middleware/auth.js";
+import IdRequiredError from "../Errors/IdRequiredError.js";
+import IdRequiredErrorHandler from "../Middleware/IdRequiredErrorHandler.js";
 
 const router = Router();
 
@@ -74,6 +76,11 @@ router.post(
         rating,
         amenities,
       } = req.body;
+
+      if (!hostId) {
+        throw new IdRequiredError("hostId");
+      }
+
       const property = await createProperty(
         hostId,
         title,
@@ -91,7 +98,8 @@ router.post(
       next(error);
     }
   },
-  NotFoundErrorHandler
+  NotFoundErrorHandler,
+  IdRequiredErrorHandler
 );
 
 router.delete(

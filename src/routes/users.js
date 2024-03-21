@@ -45,6 +45,12 @@ router.post(
     try {
       const { username, password, name, email, phoneNumber, profilePicture } =
         req.body;
+
+      if (!email) {
+        res.status(400).json({ error: "Email is required" });
+        return;
+      }
+
       const user = await createUser(
         username,
         password,

@@ -34,13 +34,18 @@ router.get(
   },
   NotFoundErrorHandler
 );
-
 router.post(
   "/",
   auth,
   async (req, res, next) => {
     try {
       const { name } = req.body;
+
+      if (!name) {
+        res.status(400).json({ error: "Name is required" });
+        return;
+      }
+
       const amenity = await createAmenity(name);
       res.status(201).json(amenity);
     } catch (error) {
@@ -49,7 +54,6 @@ router.post(
   },
   NotFoundErrorHandler
 );
-
 router.put(
   "/:id",
   auth,

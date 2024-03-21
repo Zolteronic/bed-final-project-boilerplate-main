@@ -6,6 +6,8 @@ import getAmenityById from "../services/amenities/getAmenityById.js";
 import createAmenity from "../services/amenities/createAmenity.js";
 import updateAmenity from "../services/amenities/updateAmenity.js";
 import deleteAmenity from "../services/amenities/deleteAmenity.js";
+import IdRequiredError from "../Errors/IdRequiredError.js";
+import IdRequiredErrorHandler from "../Middleware/IdRequiredErrorHandler.js";
 const router = Router();
 
 router.get(
@@ -42,8 +44,7 @@ router.post(
       const { name } = req.body;
 
       if (!name) {
-        res.status(400).json({ error: "Name is required" });
-        return;
+        throw new IdRequiredError("name");
       }
 
       const amenity = await createAmenity(name);
@@ -52,7 +53,8 @@ router.post(
       next(error);
     }
   },
-  NotFoundErrorHandler
+  NotFoundErrorHandler,
+  IdRequiredErrorHandler
 );
 router.put(
   "/:id",

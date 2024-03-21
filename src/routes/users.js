@@ -7,6 +7,8 @@ import NotFoundErrorHandler from "../Middleware/notFoundErrorHandler.js";
 import auth from "../Middleware/auth.js";
 import deleteUser from "../services/deleteUser.js";
 import ResourceAlreadyExistsErrorHandler from "../Middleware/ResourceAlreadyExistsErrorHandler.js";
+import IdRequiredError from "../Errors/IdRequiredError.js";
+import IdRequiredErrorHandler from "../Middleware/IdRequiredErrorHandler.js";
 
 const router = express.Router();
 
@@ -47,8 +49,7 @@ router.post(
         req.body;
 
       if (!email) {
-        res.status(400).json({ error: "Email is required" });
-        return;
+        throw new IdRequiredError("email");
       }
 
       const user = await createUser(
@@ -64,7 +65,8 @@ router.post(
       next(error);
     }
   },
-  ResourceAlreadyExistsErrorHandler
+  ResourceAlreadyExistsErrorHandler,
+  IdRequiredErrorHandler
 );
 
 router.put(

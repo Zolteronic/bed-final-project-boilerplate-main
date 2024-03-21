@@ -7,6 +7,8 @@ import updateHost from "../services/hosts/updateHost.js";
 import deleteHost from "../services/hosts/deleteHost.js";
 import auth from "../Middleware/auth.js";
 import ResourceAlreadyExistsErrorHandler from "../Middleware/ResourceAlreadyExistsErrorHandler.js";
+import IdRequiredError from "../Errors/IdRequiredError.js";
+import IdRequiredErrorHandler from "../Middleware/IdRequiredErrorHandler.js";
 
 const router = Router();
 
@@ -49,8 +51,7 @@ router.post(
       } = req.body;
 
       if (!username) {
-        res.status(400).json({ error: "Username is required" });
-        return;
+        throw new IdRequiredError("username");
       }
 
       const host = await createHost(
@@ -68,7 +69,8 @@ router.post(
     }
   },
   NotFoundErrorHandler,
-  ResourceAlreadyExistsErrorHandler
+  ResourceAlreadyExistsErrorHandler,
+  IdRequiredErrorHandler
 );
 
 router.put(

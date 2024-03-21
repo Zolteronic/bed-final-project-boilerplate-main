@@ -12,6 +12,10 @@ const createBooking = async (
 ) => {
   const prisma = new PrismaClient();
 
+  if (!userId || !propertyId) {
+    throw new Error("User ID and Property ID are required");
+  }
+
   const user = await prisma.user.findUnique({
     where: {
       id: userId,

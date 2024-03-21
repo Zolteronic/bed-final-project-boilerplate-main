@@ -6,7 +6,8 @@ import deleteBooking from "../services/bookings/deleteBooking.js";
 import getBookingById from "../services/bookings/getBookingById.js";
 import auth from "../Middleware/auth.js";
 import getBookings from "../services/bookings/getBookings.js";
-
+import IdRequiredError from "../Errors/IdRequiredError.js";
+import IdRequiredErrorHandler from "../Middleware/IdRequiredErrorHandler.js";
 const router = Router();
 
 router.get(
@@ -37,6 +38,9 @@ router.post(
         checkinDate,
         checkoutDate,
       } = req.body;
+      if (!userId) {
+        throw new IdRequiredError("userId");
+      }
 
       const booking = await createBooking(
         userId,
@@ -52,7 +56,8 @@ router.post(
       next(error);
     }
   },
-  NotFoundErrorHandler
+  NotFoundErrorHandler,
+  IdRequiredErrorHandler
 );
 
 router.put(
@@ -61,13 +66,17 @@ router.put(
   async (req, res, next) => {
     try {
       const { id } = req.params;
+      if (!id) {
+        throw new IdRequiredError("id");
+      }
       const booking = await updateBooking(id, req.body);
       res.status(201).json(booking);
     } catch (error) {
       next(error);
     }
   },
-  NotFoundErrorHandler
+  NotFoundErrorHandler,
+  IdRequiredErrorHandler
 );
 
 router.get(

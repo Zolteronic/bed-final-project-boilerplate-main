@@ -6,6 +6,7 @@ import createHost from "../services/hosts/createHost.js";
 import updateHost from "../services/hosts/updateHost.js";
 import deleteHost from "../services/hosts/deleteHost.js";
 import auth from "../Middleware/auth.js";
+import ResourceAlreadyExistsErrorHandler from "../Middleware/ResourceAlreadyExistsErrorHandler.js";
 
 const router = Router();
 
@@ -60,7 +61,8 @@ router.post(
       next(error);
     }
   },
-  NotFoundErrorHandler
+  NotFoundErrorHandler,
+  ResourceAlreadyExistsErrorHandler
 );
 
 router.put(

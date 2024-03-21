@@ -6,6 +6,8 @@ import getReviewById from "../services/reviews/getReviewById.js";
 import updateReview from "../services/reviews/updateReview.js";
 import deleteReview from "../services/reviews/deleteReview.js";
 import auth from "../Middleware/auth.js";
+import IdRequiredError from "../Errors/IdRequiredError.js";
+import IdRequiredErrorHandler from "../Middleware/IdRequiredErrorHandler.js";
 
 const router = Router();
 
@@ -58,6 +60,9 @@ router.put(
     try {
       const { id } = req.params;
       const { userId, propertyId, rating, comment } = req.body;
+      if (!userId) {
+        throw new IdRequiredError("userId");
+      }
       const review = await updateReview(
         id,
         userId,
@@ -70,9 +75,9 @@ router.put(
       next(error);
     }
   },
-  NotFoundErrorHandler
+  NotFoundErrorHandler,
+  IdRequiredErrorHandler
 );
-
 router.delete(
   "/:id",
   auth,

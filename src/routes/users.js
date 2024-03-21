@@ -6,6 +6,7 @@ import editUser from "../services/editUser.js";
 import NotFoundErrorHandler from "../Middleware/notFoundErrorHandler.js";
 import auth from "../Middleware/auth.js";
 import deleteUser from "../services/deleteUser.js";
+import ResourceAlreadyExistsErrorHandler from "../Middleware/ResourceAlreadyExistsErrorHandler.js";
 
 const router = express.Router();
 
@@ -37,23 +38,28 @@ router.get(
   NotFoundErrorHandler
 );
 
-router.post("/", auth, async (req, res, next) => {
-  try {
-    const { username, password, name, email, phoneNumber, profilePicture } =
-      req.body;
-    const user = await createUser(
-      username,
-      password,
-      name,
-      email,
-      phoneNumber,
-      profilePicture
-    );
-    res.status(201).json(user);
-  } catch (error) {
-    next(error);
-  }
-});
+router.post(
+  "/",
+  auth,
+  async (req, res, next) => {
+    try {
+      const { username, password, name, email, phoneNumber, profilePicture } =
+        req.body;
+      const user = await createUser(
+        username,
+        password,
+        name,
+        email,
+        phoneNumber,
+        profilePicture
+      );
+      res.status(201).json(user);
+    } catch (error) {
+      next(error);
+    }
+  },
+  ResourceAlreadyExistsErrorHandler
+);
 
 router.put(
   "/:id",

@@ -1,6 +1,6 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
-import NotFoundError from "../Errors/NotFoundError.js";
+import ResourceAlreadyExistsError from "../Errors/ResourceAlreadyExistsError.js";
 
 const createUser = async (
   username,
@@ -11,6 +11,16 @@ const createUser = async (
   profilePicture
 ) => {
   const prisma = new PrismaClient();
+
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+
+  if (existingUser) {
+    throw new ResourceAlreadyExistsError("User");
+  }
 
   return prisma.user.create({
     data: {

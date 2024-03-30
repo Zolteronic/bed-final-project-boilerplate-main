@@ -64,7 +64,7 @@ router.put(
       const { id } = req.params;
       const { name } = req.body;
       const amenity = await updateAmenity(id, name);
-      res.status(201).json(amenity);
+      res.status(200).json(amenity);
     } catch (error) {
       next(error);
     }

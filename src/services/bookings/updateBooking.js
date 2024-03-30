@@ -16,14 +16,16 @@ const updateBooking = async (id, fields) => {
     throw new NotFoundError("Property", "id", propertyId);
   }
 
+  const existingBooking = await prisma.booking.findUnique({ where: { id } });
+
+  if (!existingBooking) {
+    throw new NotFoundError("Booking", "id", id);
+  }
+
   const booking = await prisma.booking.update({
     where: { id },
     data: fields,
   });
-
-  if (!booking) {
-    throw new NotFoundError("Booking", "id", id);
-  }
 
   return booking;
 };

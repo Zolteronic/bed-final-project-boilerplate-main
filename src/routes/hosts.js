@@ -14,7 +14,8 @@ const router = Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const hosts = await getHosts();
+    const { name } = req.query;
+    const hosts = await getHosts(name);
     res.status(200).json(hosts);
   } catch (error) {
     next(error);
@@ -98,7 +99,7 @@ router.put(
         profilePicture,
         aboutMe
       );
-      res.status(201).json(host);
+      res.status(200).json(host);
     } catch (error) {
       next(error);
     }

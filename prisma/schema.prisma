@@ -19,7 +19,7 @@ model User{
   username     String  @unique
   password String
   name     String
-  email     String  @unique
+  email     String 
   phoneNumber String
   profilePicture String?
   reviews Review[]

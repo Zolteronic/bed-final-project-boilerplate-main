@@ -14,14 +14,12 @@ const deleteHost = async (id) => {
     throw new NotFoundError("Host", "id", id);
   }
 
-  // Eerst alle gerelateerde Property records verwijderen
   await prisma.property.deleteMany({
     where: {
       hostId: id,
     },
   });
 
-  // Daarna de Host verwijderen
   await prisma.host.delete({
     where: {
       id,

@@ -48,10 +48,9 @@ router.post(
       const { username, password, name, email, phoneNumber, profilePicture } =
         req.body;
 
-      if (!email) {
-        throw new IdRequiredError("email");
+      if (!username) {
+        throw new IdRequiredError("username");
       }
-
       const user = await createUser(
         username,
         password,
@@ -60,6 +59,7 @@ router.post(
         phoneNumber,
         profilePicture
       );
+
       res.status(201).json(user);
     } catch (error) {
       next(error);
@@ -86,7 +86,8 @@ router.put(
         phoneNumber,
         profilePicture
       );
-      res.status(201).json(user);
+
+      res.status(200).json(user);
     } catch (error) {
       next(error);
     }

@@ -51,7 +51,7 @@ router.put(
       const id = req.params.id;
       const data = req.body;
       const property = await updateProperties(id, data);
-      res.status(201).json(property);
+      res.status(200).json(property);
     } catch (error) {
       next(error);
     }

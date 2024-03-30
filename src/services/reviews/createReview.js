@@ -15,27 +15,6 @@ const createReview = async (userId, propertyId, rating, comment) => {
     throw new NotFoundError("User", "id", userId);
   }
 
-  const property = await prisma.property.findUnique({
-    where: {
-      id: propertyId,
-    },
-  });
-
-  if (!property) {
-    throw new NotFoundError("Property", "id", propertyId);
-  }
-
-  const existingReview = await prisma.review.findFirst({
-    where: {
-      userId,
-      propertyId,
-    },
-  });
-
-  if (existingReview) {
-    throw new ResourceAlreadyExistsError("Review");
-  }
-
   const newReview = await prisma.review.create({
     data: {
       userId,

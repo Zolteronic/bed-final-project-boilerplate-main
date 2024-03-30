@@ -4,6 +4,16 @@ import NotFoundError from "../Errors/NotFoundError.js";
 const deleteUser = async (id) => {
   const prisma = new PrismaClient();
 
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!user) {
+    throw new NotFoundError("User", "id", id);
+  }
+
   await prisma.review.deleteMany({
     where: {
       userId: id,
@@ -16,15 +26,12 @@ const deleteUser = async (id) => {
     },
   });
 
-  const deleteUser = await prisma.user.deleteMany({
+  await prisma.user.delete({
     where: {
       id,
     },
   });
 
-  if (!deleteUser) {
-    throw new NotFoundError("User", "id", id);
-  }
   return id;
 };
 

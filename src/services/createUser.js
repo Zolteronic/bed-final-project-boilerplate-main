@@ -14,7 +14,7 @@ const createUser = async (
 
   const existingUser = await prisma.user.findUnique({
     where: {
-      email: email,
+      username: username,
     },
   });
 
@@ -22,7 +22,7 @@ const createUser = async (
     throw new ResourceAlreadyExistsError("User");
   }
 
-  return prisma.user.create({
+  const user = await prisma.user.create({
     data: {
       username,
       password,
@@ -32,5 +32,7 @@ const createUser = async (
       profilePicture,
     },
   });
+
+  return user;
 };
 export default createUser;

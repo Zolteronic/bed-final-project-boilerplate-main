@@ -1,6 +1,6 @@
 class IdRequiredError extends Error {
-  constructor() {
-    super("id is required");
+  constructor(message) {
+    super(message);
     this.name = "IdRequiredError";
   }
 }

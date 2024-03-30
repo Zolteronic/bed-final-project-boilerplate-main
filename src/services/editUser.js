@@ -11,7 +11,18 @@ const editUser = async (
   profilePicture
 ) => {
   const prisma = new PrismaClient();
-  const editUser = await prisma.user.updateMany({
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!user) {
+    throw new NotFoundError("User", "id", id);
+  }
+
+  const updatedUser = await prisma.user.update({
     where: {
       id,
     },
@@ -24,12 +35,8 @@ const editUser = async (
       profilePicture,
     },
   });
-  if (!editUser) {
-    throw new NotFoundError("User", "id", id);
-  }
-  return {
-    message: "User edited successfully",
-  };
+
+  return updatedUser;
 };
 
 export default editUser;

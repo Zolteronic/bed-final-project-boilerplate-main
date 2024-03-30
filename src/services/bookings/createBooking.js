@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import NotFoundError from "../../Errors/NotFoundError.js";
 
 const createBooking = async (
   userId,
@@ -12,46 +11,10 @@ const createBooking = async (
 ) => {
   const prisma = new PrismaClient();
 
-  if (!userId || !propertyId) {
-    throw new Error("User ID and Property ID are required");
-  }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
-
-  if (!user) {
-    throw new NotFoundError("User", "id", userId);
-  }
-
-  if (!propertyId) {
-    throw new NotFoundError("Property", "id", propertyId);
-  }
-
-  const property = await prisma.property.findUnique({
-    where: {
-      id: propertyId,
-    },
-  });
-
-  if (!property) {
-    throw new NotFoundError("Property", "id", propertyId);
-  }
-
   const booking = await prisma.booking.create({
     data: {
-      user: {
-        connect: {
-          id: userId,
-        },
-      },
-      property: {
-        connect: {
-          id: propertyId,
-        },
-      },
+      userId,
+      propertyId,
       checkinDate,
       checkoutDate,
       numberOfGuests,

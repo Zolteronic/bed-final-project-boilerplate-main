@@ -28,6 +28,16 @@ const updateProperties = async (id, data) => {
     }
   }
 
+  const property = await prisma.property.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!property) {
+    throw new NotFoundError("Property", "id", id);
+  }
+
   await prisma.property.update({
     where: { id: id },
     data: {
@@ -48,6 +58,7 @@ const updateProperties = async (id, data) => {
       },
     });
   }
+
   const updateData = {};
   if (hostId !== undefined) updateData.hostId = hostId;
   if (title !== undefined) updateData.title = title;
@@ -59,16 +70,6 @@ const updateProperties = async (id, data) => {
   if (maxGuestCount !== undefined) updateData.maxGuestCount = maxGuestCount;
   if (rating !== undefined) updateData.rating = rating;
 
-  const property = await prisma.property.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  if (!property) {
-    throw new NotFoundError("Property", "id", id);
-  }
-
   const updatedProperty = await prisma.property.update({
     where: { id: id },
     data: updateData,
@@ -79,4 +80,5 @@ const updateProperties = async (id, data) => {
 
   return updatedProperty;
 };
+
 export default updateProperties;

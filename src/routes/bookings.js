@@ -38,6 +38,7 @@ router.post(
         checkinDate,
         checkoutDate,
       } = req.body;
+
       if (!userId) {
         throw new IdRequiredError("userId");
       }
@@ -51,6 +52,7 @@ router.post(
         checkinDate,
         checkoutDate
       );
+
       res.status(201).json(booking);
     } catch (error) {
       next(error);
@@ -70,7 +72,7 @@ router.put(
         throw new IdRequiredError("id");
       }
       const booking = await updateBooking(id, req.body);
-      res.status(201).json(booking);
+      res.status(200).json(booking);
     } catch (error) {
       next(error);
     }
